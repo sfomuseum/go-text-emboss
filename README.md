@@ -94,7 +94,7 @@ California Wines
 "america
 ```
 
-Or, assuming the there is a copy of the [text-emboss-server](https://github.com/sfomuseum/swift-text-emboss-www) tool listening for request on `http://localhost:8080`:
+Or, assuming the there is a copy of the [text-emboss-server](https://github.com/sfomuseum/swift-text-emboss-www) tool listening for requests on `http://localhost:8080`:
 
 ```
 $> ./bin/emboss -embosser-uri http://localhost:8080 .fixtures/menu.jpg
