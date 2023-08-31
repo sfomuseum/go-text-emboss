@@ -12,33 +12,49 @@ import (
 	"net/textproto"
 	"os"
 	"path/filepath"
+	"runtime"
 	"strconv"
 )
 
-type RemoteEmbosser struct {
+type HTTPEmbosser struct {
 	client   *http.Client
 	endpoint string
 }
 
 func init() {
 	ctx := context.Background()
-	RegisterEmbosser(ctx, "http", NewRemoteEmbosser)
-	RegisterEmbosser(ctx, "https", NewRemoteEmbosser)
+	RegisterEmbosser(ctx, "http", NewHTTPEmbosser)
+	RegisterEmbosser(ctx, "https", NewHTTPEmbosser)
 }
 
-func NewRemoteEmbosser(ctx context.Context, uri string) (Embosser, error) {
+func NewHTTPEmbosser(ctx context.Context, uri string) (Embosser, error) {
 
-	cl := &http.Client{}
+	max_conns := runtime.NumCPU() * 5
 
-	e := &RemoteEmbosser{
-		client:   cl,
+	tr := &http.Transport{
+		MaxIdleConns:        max_conns,
+		MaxIdleConnsPerHost: max_conns,
+		DisableKeepAlives:   true,
+	}
+
+	cl := &http.Client{
+		Transport: tr,
+	}
+
+	return NewHTTPEmbosserWithClient(ctx, uri, cl)
+}
+
+func NewHTTPEmbosserWithClient(ctx context.Context, uri string, client *http.Client) (Embosser, error) {
+
+	e := &HTTPEmbosser{
+		client:   client,
 		endpoint: uri,
 	}
 
 	return e, nil
 }
 
-func (e *RemoteEmbosser) EmbossText(ctx context.Context, path string) ([]byte, error) {
+func (e *HTTPEmbosser) EmbossText(ctx context.Context, path string) ([]byte, error) {
 
 	ctx, cancel := context.WithCancel(ctx)
 	defer cancel()
@@ -54,7 +70,7 @@ func (e *RemoteEmbosser) EmbossText(ctx context.Context, path string) ([]byte, e
 	return e.EmbossTextWithReader(ctx, path, im_r)
 }
 
-func (e *RemoteEmbosser) EmbossTextWithReader(ctx context.Context, path string, im_r io.Reader) ([]byte, error) {
+func (e *HTTPEmbosser) EmbossTextWithReader(ctx context.Context, path string, im_r io.Reader) ([]byte, error) {
 
 	fname := filepath.Base(path)
 

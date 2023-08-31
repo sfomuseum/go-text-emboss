@@ -7,7 +7,7 @@ import (
 	"testing"
 )
 
-const EXPECTED_REMOTE string = `Mood-lit Libations
+const EXPECTED_HTTP string = `Mood-lit Libations
 Champagne Powder Cocktail
 Champagne served with St. Germain
 elderflower liqueur and hibiscus syrup
@@ -21,17 +21,17 @@ Colorado Craft Beer
 California Wines
 "america`
 
-var remote_embosser_uri = flag.String("remote-embosser-uri", "", "A valid sfomuseum/go-text-emboss URI")
+var http_embosser_uri = flag.String("http-embosser-uri", "", "A valid sfomuseum/go-text-emboss URI")
 
-func TestRemoteEmbosser(t *testing.T) {
+func TestHTTPEmbosser(t *testing.T) {
 
-	if *remote_embosser_uri == "" {
+	if *http_embosser_uri == "" {
 		t.Skip()
 	}
 
 	ctx := context.Background()
 
-	e, err := NewEmbosser(ctx, *remote_embosser_uri)
+	e, err := NewEmbosser(ctx, *http_embosser_uri)
 
 	if err != nil {
 		t.Fatalf("Failed to create embosser, %v", err)
@@ -45,20 +45,20 @@ func TestRemoteEmbosser(t *testing.T) {
 
 	str_rsp := string(rsp)
 
-	if str_rsp != EXPECTED_REMOTE {
+	if str_rsp != EXPECTED_HTTP {
 		t.Fatalf("Unexpected output '%s'", str_rsp)
 	}
 }
 
-func TestRemoteEmbosserWithReader(t *testing.T) {
+func TestHTTPEmbosserWithReader(t *testing.T) {
 
-	if *remote_embosser_uri == "" {
+	if *http_embosser_uri == "" {
 		t.Skip()
 	}
 
 	ctx := context.Background()
 
-	e, err := NewEmbosser(ctx, *remote_embosser_uri)
+	e, err := NewEmbosser(ctx, *http_embosser_uri)
 
 	if err != nil {
 		t.Fatalf("Failed to create embosser, %v", err)
@@ -80,7 +80,7 @@ func TestRemoteEmbosserWithReader(t *testing.T) {
 
 	str_rsp := string(rsp)
 
-	if str_rsp != EXPECTED_REMOTE {
+	if str_rsp != EXPECTED_HTTP {
 		t.Fatalf("Unexpected output '%s'", str_rsp)
 	}
 }

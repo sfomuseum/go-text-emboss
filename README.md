@@ -37,9 +37,9 @@ func main() {
 }
 ```
 
-### Remote
+### Remote (HTTP)
 
-Remote text "embossing" depends on their being a copy of the [text-emboss-server](https://github.com/sfomuseum/swift-text-emboss-www) tool running that can be accessed over HTTP.
+Remote (HTTP) text "embossing" depends on their being a copy of the [text-emboss-server](https://github.com/sfomuseum/swift-text-emboss-www) tool running that can be accessed over HTTP.
 
 ```
 package main
@@ -115,26 +115,26 @@ California Wines
 
 ## Tests
 
-To run tests you will need to specify the custom `-local-embosser-uri` and `-remote-embosser-uri` flag with values specific to your system. For example:
+To run tests you will need to specify the custom `-local-embosser-uri` and `-http-embosser-uri` flag with values specific to your system. For example:
 
 ```
-$> go test -v -local-embosser-uri local:///usr/local/sfomuseum/bin/text-emboss -remote-embosser-uri http://localhost:8080
+$> go test -v -local-embosser-uri local:///usr/local/sfomuseum/bin/text-emboss -http-embosser-uri http://localhost:8080
+=== RUN   TestHTTPEmbosser
+--- PASS: TestHTTPEmbosser (0.73s)
+=== RUN   TestHTTPEmbosserWithReader
+--- PASS: TestHTTPEmbosserWithReader (0.85s)
 === RUN   TestLocalEmbosser
---- PASS: TestLocalEmbosser (0.34s)
+--- PASS: TestLocalEmbosser (0.31s)
 === RUN   TestLocalEmbosserWithReader
 --- PASS: TestLocalEmbosserWithReader (0.29s)
 === RUN   TestLocalEmbosserWithReaderAndPath
---- PASS: TestLocalEmbosserWithReaderAndPath (0.29s)
+--- PASS: TestLocalEmbosserWithReaderAndPath (0.30s)
 === RUN   TestNullEmbosser
 --- PASS: TestNullEmbosser (0.00s)
 === RUN   TestNullEmbosserWithReader
 --- PASS: TestNullEmbosserWithReader (0.00s)
-=== RUN   TestRemoteEmbosser
---- PASS: TestRemoteEmbosser (0.30s)
-=== RUN   TestRemoteEmbosserWithReader
---- PASS: TestRemoteEmbosserWithReader (0.29s)
 PASS
-ok
+ok  	github.com/sfomuseum/go-text-emboss	2.791s
 ```
 
 _Note that the `TestLocal` tests are only applicable on OS X (`darwin`) systems._
