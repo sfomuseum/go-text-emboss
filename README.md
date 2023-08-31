@@ -113,6 +113,28 @@ California Wines
 "america
 ```
 
+## Tests
+
+To run tests you will need to specify the custom `-local-embosser-uri` and `-remote-embosser-uri` flag with values specific to your system. For example:
+
+```
+$> go test -v -local-embosser-uri local:///usr/local/sfomuseum/bin/text-emboss -remote-embosser-uri http://localhost:8080
+=== RUN   TestLocalEmbosser
+--- PASS: TestLocalEmbosser (0.34s)
+=== RUN   TestLocalEmbosserWithReader
+--- PASS: TestLocalEmbosserWithReader (0.29s)
+=== RUN   TestLocalEmbosserWithReaderAndPath
+--- PASS: TestLocalEmbosserWithReaderAndPath (0.29s)
+=== RUN   TestRemoteEmbosser
+--- PASS: TestRemoteEmbosser (0.30s)
+=== RUN   TestRemoteEmbosserWithReader
+--- PASS: TestRemoteEmbosserWithReader (0.29s)
+PASS
+ok
+```
+
+_Note that the `TestLocal` tests are only applicable on OS X (`darwin`) systems._
+
 ## See also
 
 * https://github.com/sfomuseum/swift-text-emboss

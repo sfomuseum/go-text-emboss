@@ -3,6 +3,7 @@ package emboss
 import (
 	"context"
 	"fmt"
+	"io"
 	"net/url"
 	"os"
 	"os/exec"
@@ -53,4 +54,47 @@ func (e *LocalEmbosser) EmbossText(ctx context.Context, path string) ([]byte, er
 	}
 
 	return out, nil
+}
+
+func (e *LocalEmbosser) EmbossTextWithReader(ctx context.Context, path string, r io.Reader) ([]byte, error) {
+
+	var wr io.WriteCloser
+
+	if path != "" {
+
+		w, err := os.OpenFile(path, os.O_RDWR|os.O_CREATE, 0644)
+
+		if err != nil {
+			return nil, fmt.Errorf("Failed to open %s for writing, %w", path, err)
+		}
+
+		wr = w
+
+	} else {
+
+		w, err := os.CreateTemp("", "emboss")
+
+		if err != nil {
+			return nil, fmt.Errorf("Failed to create temp file for writing reader, %w", err)
+		}
+
+		path = w.Name()
+		wr = w
+	}
+
+	defer os.Remove(path)
+
+	_, err := io.Copy(wr, r)
+
+	if err != nil {
+		return nil, fmt.Errorf("Failed to copy reader to %s, %w", path, err)
+	}
+
+	err = wr.Close()
+
+	if err != nil {
+		return nil, fmt.Errorf("Failed to close %s, %w", path, err)
+	}
+
+	return e.EmbossText(ctx, path)
 }

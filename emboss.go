@@ -3,6 +3,7 @@ package emboss
 import (
 	"context"
 	"fmt"
+	"io"
 	"net/url"
 	"sort"
 	"strings"
@@ -12,6 +13,7 @@ import (
 
 type Embosser interface {
 	EmbossText(context.Context, string) ([]byte, error)
+	EmbossTextWithReader(context.Context, string, io.Reader) ([]byte, error)
 }
 
 var embosser_roster roster.Roster
