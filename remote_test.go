@@ -2,6 +2,7 @@ package emboss
 
 import (
 	"context"
+	"flag"
 	"os"
 	"testing"
 )
@@ -20,13 +21,17 @@ Colorado Craft Beer
 California Wines
 "america`
 
+var remote_embosser_uri = flag.String("remote-embosser-uri", "", "A valid sfomuseum/go-text-emboss URI")
+
 func TestRemoteEmbosser(t *testing.T) {
+
+	if *remote_embosser_uri == "" {
+		t.Skip()
+	}
 
 	ctx := context.Background()
 
-	embosser_uri := "http://localhost:8080"
-
-	e, err := NewEmbosser(ctx, embosser_uri)
+	e, err := NewEmbosser(ctx, *remote_embosser_uri)
 
 	if err != nil {
 		t.Fatalf("Failed to create embosser, %v", err)
@@ -47,11 +52,13 @@ func TestRemoteEmbosser(t *testing.T) {
 
 func TestRemoteEmbosserWithReader(t *testing.T) {
 
+	if *remote_embosser_uri == "" {
+		t.Skip()
+	}
+
 	ctx := context.Background()
 
-	embosser_uri := "http://localhost:8080"
-
-	e, err := NewEmbosser(ctx, embosser_uri)
+	e, err := NewEmbosser(ctx, *remote_embosser_uri)
 
 	if err != nil {
 		t.Fatalf("Failed to create embosser, %v", err)

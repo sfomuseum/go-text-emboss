@@ -1,7 +1,9 @@
+// go:build darwin
 package emboss
 
 import (
 	"context"
+	"flag"
 	"os"
 	"testing"
 )
@@ -21,13 +23,17 @@ California Wines
 "america
 `
 
+var local_embosser_uri = flag.String("local-embosser-uri", "", "A valid sfomuseum/go-text-emboss URI")
+
 func TestLocalEmbosser(t *testing.T) {
+
+	if *local_embosser_uri == "" {
+		t.Skip()
+	}
 
 	ctx := context.Background()
 
-	embosser_uri := "local:///usr/local/sfomuseum/bin/text-emboss"
-
-	e, err := NewEmbosser(ctx, embosser_uri)
+	e, err := NewEmbosser(ctx, *local_embosser_uri)
 
 	if err != nil {
 		t.Fatalf("Failed to create embosser, %v", err)
@@ -48,11 +54,13 @@ func TestLocalEmbosser(t *testing.T) {
 
 func TestLocalEmbosserWithReader(t *testing.T) {
 
+	if *local_embosser_uri == "" {
+		t.Skip()
+	}
+
 	ctx := context.Background()
 
-	embosser_uri := "local:///usr/local/sfomuseum/bin/text-emboss"
-
-	e, err := NewEmbosser(ctx, embosser_uri)
+	e, err := NewEmbosser(ctx, *local_embosser_uri)
 
 	if err != nil {
 		t.Fatalf("Failed to create embosser, %v", err)
@@ -81,11 +89,13 @@ func TestLocalEmbosserWithReader(t *testing.T) {
 
 func TestLocalEmbosserWithReaderAndPath(t *testing.T) {
 
+	if *local_embosser_uri == "" {
+		t.Skip()
+	}
+
 	ctx := context.Background()
 
-	embosser_uri := "local:///usr/local/sfomuseum/bin/text-emboss"
-
-	e, err := NewEmbosser(ctx, embosser_uri)
+	e, err := NewEmbosser(ctx, *local_embosser_uri)
 
 	if err != nil {
 		t.Fatalf("Failed to create embosser, %v", err)
