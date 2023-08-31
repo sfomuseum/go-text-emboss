@@ -51,6 +51,11 @@ func (e *RemoteEmbosser) EmbossText(ctx context.Context, path string) ([]byte, e
 
 	defer im_r.Close()
 
+	return e.EmbossTextWithReader(ctx, path, im_r)
+}
+
+func (e *RemoteEmbosser) EmbossTextWithReader(ctx context.Context, path string, im_r io.Reader) ([]byte, error) {
+
 	fname := filepath.Base(path)
 
 	body := &bytes.Buffer{}
