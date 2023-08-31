@@ -125,6 +125,10 @@ $> go test -v -local-embosser-uri local:///usr/local/sfomuseum/bin/text-emboss -
 --- PASS: TestLocalEmbosserWithReader (0.29s)
 === RUN   TestLocalEmbosserWithReaderAndPath
 --- PASS: TestLocalEmbosserWithReaderAndPath (0.29s)
+=== RUN   TestNullEmbosser
+--- PASS: TestNullEmbosser (0.00s)
+=== RUN   TestNullEmbosserWithReader
+--- PASS: TestNullEmbosserWithReader (0.00s)
 === RUN   TestRemoteEmbosser
 --- PASS: TestRemoteEmbosser (0.30s)
 === RUN   TestRemoteEmbosserWithReader
