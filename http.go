@@ -129,6 +129,10 @@ func (e *HTTPEmbosser) EmbossTextWithReader(ctx context.Context, path string, im
 	return rsp_body, nil
 }
 
+func (e *HTTPEmbosser) Close(ctx context.Context) error {
+	return nil
+}
+
 func CreateImageFormFile(w *multipart.Writer, name, filename string) (io.Writer, error) {
 
 	ext := filepath.Ext(filename)

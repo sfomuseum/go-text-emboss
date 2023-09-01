@@ -17,15 +17,17 @@ func main() {
 
 	ctx := context.Background()
 
-	ex, err := emboss.NewEmbosser(ctx, *embosser_uri)
+	em, err := emboss.NewEmbosser(ctx, *embosser_uri)
 
 	if err != nil {
 		log.Fatalf("Failed to create new embosser, %v", err)
 	}
 
+	defer em.Close(ctx)
+
 	for _, path := range flag.Args() {
 
-		rsp, err := ex.EmbossText(ctx, path)
+		rsp, err := em.EmbossText(ctx, path)
 
 		if err != nil {
 			log.Fatalf("Failed to extract text from %s, %v", path, err)

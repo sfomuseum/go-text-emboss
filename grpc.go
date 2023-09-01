@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 	"io"
-	_ "log"
+	"log"
 	"net/url"
 	"os"
 	"path/filepath"
@@ -14,7 +14,8 @@ import (
 )
 
 type GrpcEmbosser struct {
-	endpoint string
+	conn   *grpc.ClientConn
+	client emboss_grpc.EmbosserClient
 }
 
 func init() {
@@ -32,8 +33,22 @@ func NewGrpcEmbosser(ctx context.Context, uri string) (Embosser, error) {
 
 	addr := u.Host
 
+	var opts []grpc.DialOption
+	opts = append(opts, grpc.WithInsecure())
+
+	conn, err := grpc.Dial(addr, opts...)
+
+	if err != nil {
+		return nil, fmt.Errorf("Failed to dial '%s', %w", addr, err)
+	}
+
+	// defer conn.Close()
+
+	client := emboss_grpc.NewEmbosserClient(conn)
+
 	e := &GrpcEmbosser{
-		endpoint: addr,
+		conn:   conn,
+		client: client,
 	}
 
 	return e, nil
@@ -65,33 +80,22 @@ func (e *GrpcEmbosser) EmbossTextWithReader(ctx context.Context, path string, im
 		return nil, fmt.Errorf("Failed to read %s, %w", path, err)
 	}
 
-	// START OF grpc conn stuff
-
-	var opts []grpc.DialOption
-	opts = append(opts, grpc.WithInsecure())
-
-	conn, err := grpc.Dial(e.endpoint, opts...)
-
-	if err != nil {
-		return nil, fmt.Errorf("Failed to dial '%s', %w", e.endpoint, err)
-	}
-
-	defer conn.Close()
-
-	// END OF grpc conn stuff
-
 	req := &emboss_grpc.EmbossTextRequest{
 		Filename: fname,
 		Body:     body,
 	}
 
-	client := emboss_grpc.NewEmbosserClient(conn)
+	rsp, err := e.client.EmbossText(ctx, req)
 
-	rsp, err := client.EmbossText(ctx, req)
+	log.Println("RSP", rsp)
 
 	if err != nil {
 		return nil, fmt.Errorf("Failed to emboss text, %w", err)
 	}
 
 	return []byte(rsp.Body), nil
+}
+
+func (e *GrpcEmbosser) Close(ctx context.Context) error {
+	return e.conn.Close()
 }

@@ -14,6 +14,7 @@ import (
 type Embosser interface {
 	EmbossText(context.Context, string) ([]byte, error)
 	EmbossTextWithReader(context.Context, string, io.Reader) ([]byte, error)
+	Close(context.Context) error
 }
 
 var embosser_roster roster.Roster
