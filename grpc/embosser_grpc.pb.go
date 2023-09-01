@@ -2,7 +2,7 @@
 // versions:
 // - protoc-gen-go-grpc v1.3.0
 // - protoc             v4.24.2
-// source: grpc/provider.proto
+// source: grpc/embosser.proto
 
 package grpc
 
@@ -105,5 +105,5 @@ var Embosser_ServiceDesc = grpc.ServiceDesc{
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
-	Metadata: "grpc/provider.proto",
+	Metadata: "grpc/embosser.proto",
 }

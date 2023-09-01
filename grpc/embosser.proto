@@ -13,5 +13,5 @@ message EmbossTextRequest {
 
 message EmbossTextResponse {
 	string Filename = 1;
-	string Body = 2;
+	bytes Body = 2;
 }	

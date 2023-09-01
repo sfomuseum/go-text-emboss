@@ -91,7 +91,7 @@ func (e *GrpcEmbosser) EmbossTextWithReader(ctx context.Context, path string, im
 		return nil, fmt.Errorf("Failed to emboss text, %w", err)
 	}
 
-	return []byte(rsp.Body), nil
+	return rsp.Body, nil
 }
 
 func (e *GrpcEmbosser) Close(ctx context.Context) error {
