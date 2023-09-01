@@ -98,3 +98,7 @@ func (e *LocalEmbosser) EmbossTextWithReader(ctx context.Context, path string, r
 
 	return e.EmbossText(ctx, path)
 }
+
+func (e *LocalEmbosser) Close(ctx context.Context) error {
+	return nil
+}
