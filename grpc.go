@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 	"io"
-	"log"
+	_ "log"
 	"net/url"
 	"os"
 	"path/filepath"
@@ -86,8 +86,6 @@ func (e *GrpcEmbosser) EmbossTextWithReader(ctx context.Context, path string, im
 	}
 
 	rsp, err := e.client.EmbossText(ctx, req)
-
-	log.Println("RSP", rsp)
 
 	if err != nil {
 		return nil, fmt.Errorf("Failed to emboss text, %w", err)
