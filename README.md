@@ -1,6 +1,6 @@
 # go-text-emboss
 
-Go package for interacting with the `sfomuseum/swift-text-emboss` command-line and www tools
+Go package for interacting with the `sfomuseum/swift-text-emboss` command-line, www and grpc tools
 
 ## Documentation
 
@@ -64,6 +64,33 @@ func main() {
 }
 ```
 
+### Remote (gRPC)
+
+Remote (gRPC) text "embossing" depends on their being a copy of the [text-emboss-server](https://github.com/sfomuseum/swift-text-emboss-grpc) tool running that can be accessed over TCP.
+
+```
+package main
+
+import (
+	"context"
+	"fmt"
+	"log"
+
+	"github.com/sfomuseum/go-text-emboss"
+)
+
+func main() {
+
+	ctx := context.Background()
+	ex, _ := emboss.NewEmbosser(ctx, "grpc://localhost:1234")
+
+	for _, path := range flag.Args() {
+		rsp, _ := ex.EmbossText(ctx, path)
+		fmt.Println(string(rsp))
+	}
+}
+```
+
 ## Tools
 
 ### emboss
@@ -113,12 +140,35 @@ California Wines
 "america
 ```
 
-## Tests
-
-To run tests you will need to specify the custom `-local-embosser-uri` and `-http-embosser-uri` flag with values specific to your system. For example:
+Or, assuming the there is a copy of the [text-emboss-server](https://github.com/sfomuseum/swift-text-emboss-grpc) tool listening for requests on `localhost:1234`:
 
 ```
-$> go test -v -local-embosser-uri local:///usr/local/sfomuseum/bin/text-emboss -http-embosser-uri http://localhost:8080
+$> ./bin/emboss -embosser-uri grpc://localhost:1234 .fixtures/menu.jpg
+Mood-lit Libations
+Champagne Powder Cocktail
+Champagne served with St. Germain
+elderflower liqueur and hibiscus syrup
+Mile-High Manhattan
+Stranahans whiskey served with
+sweet vermouth
+Peach Collins On The Rockies
+Silver Tree vodka, Leopold Bros peach
+liqueur, lemon juice and agave nectar
+Colorado Craft Beer
+California Wines
+"america
+```
+
+## Tests
+
+To run tests you will need to specify the custom `-local-embosser-uri`, `-grpc-embosser-uri` and `-http-embosser-uri` flag with values specific to your system. For example:
+
+```
+$> go test -v -local-embosser-uri local:///usr/local/sfomuseum/bin/text-emboss -http-embosser-uri http://localhost:8080 -grpc-embosser-uri grpc://localhost:1234
+=== RUN   TestGRPCEmbosser
+--- PASS: TestGRPCEmbosser (0.09s)
+=== RUN   TestGRPCEmbosserWithReader
+--- PASS: TestGRPCEmbosserWithReader (0.07s)
 === RUN   TestHTTPEmbosser
 --- PASS: TestHTTPEmbosser (0.73s)
 === RUN   TestHTTPEmbosserWithReader
@@ -144,4 +194,5 @@ _Note that the `TestLocal` tests are only applicable on OS X (`darwin`) systems.
 * https://github.com/sfomuseum/swift-text-emboss
 * https://github.com/sfomuseum/swift-text-emboss-cli
 * https://github.com/sfomuseum/swift-text-emboss-www
+* https://github.com/sfomuseum/swift-text-emboss-grpc
 * https://collection.sfomuseum.org/objects/1880246621/
