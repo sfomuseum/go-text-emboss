@@ -5,16 +5,15 @@ import (
 	"fmt"
 	"io"
 	_ "log"
+	"net/url"
 	"os"
 	"path/filepath"
-	"runtime"
-	"strconv"
 
-	"google.golang.org/grpc"	
+	emboss_grpc "github.com/sfomuseum/go-text-emboss/grpc"
+	"google.golang.org/grpc"
 )
 
 type GrpcEmbosser struct {
-	client   *http.Client
 	endpoint string
 }
 
@@ -25,14 +24,14 @@ func init() {
 
 func NewGrpcEmbosser(ctx context.Context, uri string) (Embosser, error) {
 
-	u, err := url.Parse()
+	u, err := url.Parse(uri)
 
 	if err != nil {
 		return nil, fmt.Errorf("Failed to parse URI, %w", err)
 	}
 
 	addr := u.Host
-	
+
 	e := &GrpcEmbosser{
 		endpoint: addr,
 	}
@@ -66,41 +65,33 @@ func (e *GrpcEmbosser) EmbossTextWithReader(ctx context.Context, path string, im
 		return nil, fmt.Errorf("Failed to read %s, %w", path, err)
 	}
 
-	// START OF grpc stuff
+	// START OF grpc conn stuff
 
 	var opts []grpc.DialOption
 	opts = append(opts, grpc.WithInsecure())
 
-	addr := fmt.Sprintf("%s:%d", host, port)
-
 	conn, err := grpc.Dial(e.endpoint, opts...)
 
 	if err != nil {
-		return nil, fmt.Errorf("Failed to dial '%s', %v", addr, err)
+		return nil, fmt.Errorf("Failed to dial '%s', %w", e.endpoint, err)
 	}
 
 	defer conn.Close()
 
-	req := &foo.Request{
+	// END OF grpc conn stuff
+
+	req := &emboss_grpc.EmbossTextRequest{
 		Filename: fname,
-		Body: body,
-	}
-	
-	client := foo.NewClient(conn)
-	
-	// END OF grpc stuff
-	
-	defer rsp.Body.Close()
-
-	if rsp.StatusCode != http.StatusOK {
-		return nil, fmt.Errorf("Request failed with status '%s'", rsp.Status)
+		Body:     body,
 	}
 
-	rsp_body, err := io.ReadAll(rsp.Body)
+	client := emboss_grpc.NewEmbosserClient(conn)
+
+	rsp, err := client.EmbossText(ctx, req)
 
 	if err != nil {
-		return nil, fmt.Errorf("Failed to read response, %w", err)
+		return nil, fmt.Errorf("Failed to emboss text, %w", err)
 	}
 
-	return rsp_body, nil
+	return []byte(rsp.Body), nil
 }
