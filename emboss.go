@@ -12,6 +12,7 @@ import (
 )
 
 // https://github.com/sfomuseum/swift-text-emboss/blob/main/Sources/TextEmboss/TextEmboss.swift#L4-L8
+// https://github.com/sfomuseum/swift-text-emboss-grpc/blob/main/Sources/TextEmbossGRPC/embosser.proto#L9-L13
 
 type EmbossTextResult struct {
 	Text    string `json:"text"`
