@@ -13,21 +13,19 @@ import (
 
 // https://github.com/sfomuseum/swift-text-emboss/blob/main/Sources/TextEmboss/TextEmboss.swift#L4-L8
 
-type ProcessImageResult struct {
+type EmbossTextResult struct {
 	Text    string `json:"text"`
 	Source  string `json:"source"`
-	Created int64  `json:"int64"`
+	Created int64  `json:"created"`
 }
 
-func (r *ProcessImageResult) String() string {
+func (r *EmbossTextResult) String() string {
 	return r.Text
 }
 
 type Embosser interface {
-	EmbossText(context.Context, string) ([]byte, error)
-	EmbossTextWithReader(context.Context, string, io.Reader) ([]byte, error)
-	EmbossTextAsResult(context.Context, string) (*ProcessImageResult, error)
-	EmbossTextAsResultWithReader(context.Context, string, io.Reader) (*ProcessImageResult, error)
+	EmbossText(context.Context, string) (*EmbossTextResult, error)
+	EmbossTextWithReader(context.Context, string, io.Reader) (*EmbossTextResult, error)
 	Close(context.Context) error
 }
 

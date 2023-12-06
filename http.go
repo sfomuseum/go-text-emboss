@@ -55,7 +55,7 @@ func NewHTTPEmbosserWithClient(ctx context.Context, uri string, client *http.Cli
 	return e, nil
 }
 
-func (e *HTTPEmbosser) EmbossText(ctx context.Context, path string) ([]byte, error) {
+func (e *HTTPEmbosser) EmbossText(ctx context.Context, path string) (*EmbossTextResult, error) {
 
 	ctx, cancel := context.WithCancel(ctx)
 	defer cancel()
@@ -71,35 +71,8 @@ func (e *HTTPEmbosser) EmbossText(ctx context.Context, path string) ([]byte, err
 	return e.EmbossTextWithReader(ctx, path, im_r)
 }
 
-func (e *HTTPEmbosser) EmbossTextWithReader(ctx context.Context, path string, im_r io.Reader) ([]byte, error) {
+func (e *HTTPEmbosser) EmbossTextWithReader(ctx context.Context, path string, im_r io.Reader) (*EmbossTextResult, error) {
 
-	rsp, err := e.EmbossTextAsResultWithReader(ctx, path, im_r)
-
-	if err != nil {
-		return nil, err
-	}
-
-	return []byte(rsp.Text), nil
-}
-
-func (e *HTTPEmbosser) EmbossTextAsResult(ctx context.Context, path string) (*ProcessImageResult, error) {
-
-	ctx, cancel := context.WithCancel(ctx)
-	defer cancel()
-
-	im_r, err := os.Open(path)
-
-	if err != nil {
-		return nil, fmt.Errorf("Failed to open %s for reading, %w", path, err)
-	}
-
-	defer im_r.Close()
-
-	return e.EmbossTextAsResultWithReader(ctx, path, im_r)
-}
-
-func (e *HTTPEmbosser) EmbossTextAsResultWithReader(ctx context.Context, path string, im_r io.Reader) (*ProcessImageResult, error) {
-	
 	fname := filepath.Base(path)
 
 	body := &bytes.Buffer{}
@@ -126,7 +99,7 @@ func (e *HTTPEmbosser) EmbossTextAsResultWithReader(ctx context.Context, path st
 	}
 
 	uri := e.endpoint + "/json"
-	
+
 	req, err := http.NewRequest("POST", uri, body)
 
 	if err != nil {
@@ -150,11 +123,11 @@ func (e *HTTPEmbosser) EmbossTextAsResultWithReader(ctx context.Context, path st
 		return nil, fmt.Errorf("Request failed with status '%s'", rsp.Status)
 	}
 
-	var im_rsp *ProcessImageResult
+	var im_rsp *EmbossTextResult
 
 	dec := json.NewDecoder(rsp.Body)
 	err = dec.Decode(&im_rsp)
-	
+
 	if err != nil {
 		return nil, fmt.Errorf("Failed to decode response, %w", err)
 	}

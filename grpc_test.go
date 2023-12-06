@@ -19,7 +19,7 @@ Silver Tree vodka, Leopold Bros peach
 liqueur, lemon juice and agave nectar
 Colorado Craft Beer
 California Wines
-"america`
+america`
 
 var grpc_embosser_uri = flag.String("grpc-embosser-uri", "", "A valid sfomuseum/go-text-emboss URI")
 
@@ -43,10 +43,10 @@ func TestGRPCEmbosser(t *testing.T) {
 		t.Fatalf("Failed to emboss text, %v", err)
 	}
 
-	str_rsp := string(rsp)
+	str_rsp := rsp.String()
 
 	if str_rsp != EXPECTED_GRPC {
-		t.Fatalf("Unexpected output '%s'", str_rsp)
+		t.Fatalf("Unexpected output '%s', expected '%s'", str_rsp, EXPECTED_GRPC)
 	}
 }
 
@@ -78,7 +78,7 @@ func TestGRPCEmbosserWithReader(t *testing.T) {
 		t.Fatalf("Failed to emboss text, %v", err)
 	}
 
-	str_rsp := string(rsp)
+	str_rsp := rsp.String()
 
 	if str_rsp != EXPECTED_GRPC {
 		t.Fatalf("Unexpected output '%s'", str_rsp)

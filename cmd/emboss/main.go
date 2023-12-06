@@ -2,9 +2,11 @@ package main
 
 import (
 	"context"
+	"encoding/json"
 	"flag"
 	"fmt"
 	"log"
+	"os"
 
 	"github.com/sfomuseum/go-text-emboss"
 )
@@ -12,6 +14,7 @@ import (
 func main() {
 
 	embosser_uri := flag.String("embosser-uri", "local:///usr/local/sfomuseum/bin/text-emboss", "A valid sfomuseum/go-text-emboss.Embosser URI.")
+	as_json := flag.Bool("as-json", false, "Return results as a JSON-encoded dictionary containing text, source and creation time properties.")
 
 	flag.Parse()
 
@@ -33,6 +36,17 @@ func main() {
 			log.Fatalf("Failed to extract text from %s, %v", path, err)
 		}
 
-		fmt.Println(string(rsp))
+		if *as_json {
+
+			enc := json.NewEncoder(os.Stdout)
+			err = enc.Encode(rsp)
+
+			if err != nil {
+				log.Fatalf("Failed to encode response as JSON, %v", err)
+			}
+
+		} else {
+			fmt.Println(rsp.String())
+		}
 	}
 }

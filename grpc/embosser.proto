@@ -7,7 +7,7 @@ service Embosser {
 }
 
 message ProcessImageResult {
-    bytes Text = 1;
+    string Text = 1;
     string Source = 2;
     int64 Created = 3;
 }

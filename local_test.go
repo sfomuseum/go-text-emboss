@@ -20,8 +20,7 @@ Silver Tree vodka, Leopold Bros peach
 liqueur, lemon juice and agave nectar
 Colorado Craft Beer
 California Wines
-"america
-`
+america`
 
 var local_embosser_uri = flag.String("local-embosser-uri", "", "A valid sfomuseum/go-text-emboss URI")
 
@@ -45,7 +44,7 @@ func TestLocalEmbosser(t *testing.T) {
 		t.Fatalf("Failed to emboss text, %v", err)
 	}
 
-	str_rsp := string(rsp)
+	str_rsp := rsp.String()
 
 	if str_rsp != EXPECTED_LOCAL {
 		t.Fatalf("Unexpected output '%s'", str_rsp)
@@ -80,7 +79,7 @@ func TestLocalEmbosserWithReader(t *testing.T) {
 		t.Fatalf("Failed to emboss text, %v", err)
 	}
 
-	str_rsp := string(rsp)
+	str_rsp := rsp.String()
 
 	if str_rsp != EXPECTED_LOCAL {
 		t.Fatalf("Unexpected output '%s'", str_rsp)
@@ -115,7 +114,7 @@ func TestLocalEmbosserWithReaderAndPath(t *testing.T) {
 		t.Fatalf("Failed to emboss text, %v", err)
 	}
 
-	str_rsp := string(rsp)
+	str_rsp := rsp.String()
 
 	if str_rsp != EXPECTED_LOCAL {
 		t.Fatalf("Unexpected output '%s'", str_rsp)

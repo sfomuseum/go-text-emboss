@@ -24,7 +24,7 @@ func TestNullEmbosser(t *testing.T) {
 		t.Fatalf("Failed to emboss text, %v", err)
 	}
 
-	str_rsp := string(rsp)
+	str_rsp := rsp.String()
 
 	if str_rsp != EXPECTED_NULL {
 		t.Fatalf("Unexpected output '%s'", str_rsp)
@@ -55,7 +55,7 @@ func TestNullEmbosserWithReader(t *testing.T) {
 		t.Fatalf("Failed to emboss text, %v", err)
 	}
 
-	str_rsp := string(rsp)
+	str_rsp := rsp.String()
 
 	if str_rsp != EXPECTED_NULL {
 		t.Fatalf("Unexpected output '%s'", str_rsp)

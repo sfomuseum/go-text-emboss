@@ -32,7 +32,7 @@ func main() {
 
 	for _, path := range flag.Args() {
 		rsp, _ := ex.EmbossText(ctx, path)
-		fmt.Println(string(rsp))
+		fmt.Println(rsp.Text)
 	}
 }
 ```
@@ -59,7 +59,7 @@ func main() {
 
 	for _, path := range flag.Args() {
 		rsp, _ := ex.EmbossText(ctx, path)
-		fmt.Println(string(rsp))
+		fmt.Println(rsp.Text)
 	}
 }
 ```
@@ -86,7 +86,7 @@ func main() {
 
 	for _, path := range flag.Args() {
 		rsp, _ := ex.EmbossText(ctx, path)
-		fmt.Println(string(rsp))
+		fmt.Println(rsp.Text)
 	}
 }
 ```
@@ -98,6 +98,8 @@ func main() {
 ```
 $> ./bin/emboss -h
 Usage of ./bin/emboss:
+  -as-json
+    	Return results as a JSON-encoded dictionary containing text, source and creation time properties.
   -embosser-uri string
     	A valid sfomuseum/go-text-emboss.Embosser URI. (default "local:///usr/local/sfomuseum/bin/text-emboss")
 ```
@@ -158,6 +160,21 @@ Colorado Craft Beer
 California Wines
 "america
 ```
+
+### JSON
+
+To return provenance and creation time for the text extracted from an image pass the `-as-json` flag which will return a JSON-encoded dictionary containing that information.
+
+```
+$> ./bin/emboss -embosser-uri 'grpc://localhost:8080' -as-json ./fixtures/menu.jpg | jq
+{
+  "text": "Mood-lit Libations\nChampagne Powder Cocktail\nChampagne served with St. Germain\nelderflower liqueur and hibiscus syrup\nMile-High Manhattan\nStranahans whiskey served with\nsweet vermouth\nPeach Collins On The Rockies\nSilver Tree vodka, Leopold Bros peach\nliqueur, lemon juice and agave nectar\nColorado Craft Beer\nCalifornia Wines\namerica",
+  "source": "com.apple.visionkit.VNImageRequestHandler#Version 14.1.2 (Build 23B92)",
+  "created": 1701900635
+}
+```
+
+Note: The `source` key is an arbitrary string used to identify the processes, or models, from which image text was derived. As of this writing this string has no standard formatting or requirements. If and when those conventions are established this package will be updated to use them.
 
 ## Tests
 
