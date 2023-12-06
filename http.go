@@ -3,6 +3,7 @@ package emboss
 import (
 	"bytes"
 	"context"
+	"encoding/json"
 	"fmt"
 	"io"
 	_ "log"
@@ -72,6 +73,33 @@ func (e *HTTPEmbosser) EmbossText(ctx context.Context, path string) ([]byte, err
 
 func (e *HTTPEmbosser) EmbossTextWithReader(ctx context.Context, path string, im_r io.Reader) ([]byte, error) {
 
+	rsp, err := e.EmbossTextAsResultWithReader(ctx, path, im_r)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return []byte(rsp.Text), nil
+}
+
+func (e *HTTPEmbosser) EmbossTextAsResult(ctx context.Context, path string) (*ProcessImageResult, error) {
+
+	ctx, cancel := context.WithCancel(ctx)
+	defer cancel()
+
+	im_r, err := os.Open(path)
+
+	if err != nil {
+		return nil, fmt.Errorf("Failed to open %s for reading, %w", path, err)
+	}
+
+	defer im_r.Close()
+
+	return e.EmbossTextAsResultWithReader(ctx, path, im_r)
+}
+
+func (e *HTTPEmbosser) EmbossTextAsResultWithReader(ctx context.Context, path string, im_r io.Reader) (*ProcessImageResult, error) {
+	
 	fname := filepath.Base(path)
 
 	body := &bytes.Buffer{}
@@ -97,7 +125,9 @@ func (e *HTTPEmbosser) EmbossTextWithReader(ctx context.Context, path string, im
 		return nil, fmt.Errorf("Failed to close form writer, %w", err)
 	}
 
-	req, err := http.NewRequest("POST", e.endpoint, body)
+	uri := e.endpoint + "/json"
+	
+	req, err := http.NewRequest("POST", uri, body)
 
 	if err != nil {
 		return nil, fmt.Errorf("Failed to create request, %w", err)
@@ -120,13 +150,16 @@ func (e *HTTPEmbosser) EmbossTextWithReader(ctx context.Context, path string, im
 		return nil, fmt.Errorf("Request failed with status '%s'", rsp.Status)
 	}
 
-	rsp_body, err := io.ReadAll(rsp.Body)
+	var im_rsp *ProcessImageResult
 
+	dec := json.NewDecoder(rsp.Body)
+	err = dec.Decode(&im_rsp)
+	
 	if err != nil {
-		return nil, fmt.Errorf("Failed to read response, %w", err)
+		return nil, fmt.Errorf("Failed to decode response, %w", err)
 	}
 
-	return rsp_body, nil
+	return im_rsp, nil
 }
 
 func (e *HTTPEmbosser) Close(ctx context.Context) error {

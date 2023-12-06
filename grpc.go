@@ -115,6 +115,28 @@ func NewGrpcEmbosser(ctx context.Context, uri string) (Embosser, error) {
 
 func (e *GrpcEmbosser) EmbossText(ctx context.Context, path string) ([]byte, error) {
 
+	rsp, err := e.EmbossTextAsResult(ctx, path)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return []byte(rsp.Text), nil
+}
+
+func (e *GrpcEmbosser) EmbossTextWithReader(ctx context.Context, path string, im_r io.Reader) ([]byte, error) {
+
+	rsp, err := e.EmbossTextAsResultWithReader(ctx, path, im_r)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return []byte(rsp.Text), nil
+}
+
+func (e *GrpcEmbosser) EmbossTextAsResult(ctx context.Context, path string) (*ProcessImageResult, error) {
+
 	ctx, cancel := context.WithCancel(ctx)
 	defer cancel()
 
@@ -126,10 +148,10 @@ func (e *GrpcEmbosser) EmbossText(ctx context.Context, path string) ([]byte, err
 
 	defer im_r.Close()
 
-	return e.EmbossTextWithReader(ctx, path, im_r)
+	return e.EmbossTextAsResultWithReader(ctx, path, im_r)
 }
 
-func (e *GrpcEmbosser) EmbossTextWithReader(ctx context.Context, path string, im_r io.Reader) ([]byte, error) {
+func (e *GrpcEmbosser) EmbossTextAsResultWithReader(ctx context.Context, path string, im_r io.Reader) (*ProcessImageResult, error) {
 
 	fname := filepath.Base(path)
 
@@ -144,13 +166,19 @@ func (e *GrpcEmbosser) EmbossTextWithReader(ctx context.Context, path string, im
 		Body:     body,
 	}
 
-	rsp, err := e.client.EmbossText(ctx, req)
+	pb_rsp, err := e.client.EmbossText(ctx, req)
 
 	if err != nil {
 		return nil, fmt.Errorf("Failed to emboss text, %w", err)
 	}
 
-	return rsp.Body, nil
+	rsp := &ProcessImageResult{
+		Text:    string(pb_rsp.Result.Text),
+		Source:  pb_rsp.Result.Source,
+		Created: pb_rsp.Result.Created,
+	}
+
+	return rsp, nil
 }
 
 func (e *GrpcEmbosser) Close(ctx context.Context) error {

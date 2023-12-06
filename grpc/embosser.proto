@@ -6,6 +6,11 @@ service Embosser {
 	rpc EmbossText(EmbossTextRequest) returns (EmbossTextResponse) {}
 }
 
+message ProcessImageResult {
+    bytes Text = 1;
+    string Source = 2;
+    int64 Created = 3;
+}
 message EmbossTextRequest {
 	string Filename = 1;
 	bytes Body = 2;
@@ -13,5 +18,5 @@ message EmbossTextRequest {
 
 message EmbossTextResponse {
 	string Filename = 1;
-	bytes Body = 2;
-}	
+    ProcessImageResult Result = 2;
+}

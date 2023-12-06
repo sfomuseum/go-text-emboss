@@ -11,9 +11,23 @@ import (
 	"github.com/aaronland/go-roster"
 )
 
+// https://github.com/sfomuseum/swift-text-emboss/blob/main/Sources/TextEmboss/TextEmboss.swift#L4-L8
+
+type ProcessImageResult struct {
+	Text    string `json:"text"`
+	Source  string `json:"source"`
+	Created int64  `json:"int64"`
+}
+
+func (r *ProcessImageResult) String() string {
+	return r.Text
+}
+
 type Embosser interface {
 	EmbossText(context.Context, string) ([]byte, error)
 	EmbossTextWithReader(context.Context, string, io.Reader) ([]byte, error)
+	EmbossTextAsResult(context.Context, string) (*ProcessImageResult, error)
+	EmbossTextAsResultWithReader(context.Context, string, io.Reader) (*ProcessImageResult, error)
 	Close(context.Context) error
 }
 
