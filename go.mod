@@ -5,7 +5,7 @@ go 1.21.0
 require (
 	github.com/aaronland/go-roster v1.0.0
 	google.golang.org/grpc v1.59.0
-	google.golang.org/protobuf v1.31.0
+	google.golang.org/protobuf v1.33.0
 )
 
 require (
