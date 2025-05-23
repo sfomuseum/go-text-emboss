@@ -2,7 +2,7 @@
 // versions:
 // - protoc-gen-go-grpc v1.3.0
 // - protoc             v5.29.3
-// source: grpc/embosser.proto
+// source: grpc/org_sfomuseum_text_embosser.proto
 
 package grpc
 
@@ -105,5 +105,5 @@ var TextEmbosser_ServiceDesc = grpc.ServiceDesc{
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
-	Metadata: "grpc/embosser.proto",
+	Metadata: "grpc/org_sfomuseum_text_embosser.proto",
 }
