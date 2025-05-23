@@ -1,4 +1,4 @@
-module github.com/sfomuseum/go-text-emboss
+module github.com/sfomuseum/go-text-emboss/v2
 
 go 1.24.3
 

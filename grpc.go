@@ -13,7 +13,7 @@ import (
 	"path/filepath"
 	"strconv"
 
-	emboss_grpc "github.com/sfomuseum/go-text-emboss/grpc"
+	emboss_grpc "github.com/sfomuseum/go-text-emboss/v2/grpc"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"
 )
