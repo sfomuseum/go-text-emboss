@@ -9,4 +9,7 @@ cli:
 # https://github.com/sfomuseum/swift-text-emboss-grpc/blob/main/Sources/text-emboss-grpc-server/embosser.proto
 
 proto:
-	protoc --go_out=. --go_opt=paths=source_relative --go_opt=paths=source_relative --go-grpc_out=. --go-grpc_opt=paths=source_relative grpc/embosser.proto
+	protoc --go_out=. --go_opt=paths=source_relative --go_opt=paths=source_relative --go-grpc_out=. --go-grpc_opt=paths=source_relative grpc/org_sfomuseum_text_embosser.proto
+
+test:
+	go run -mod $(GOMOD) cmd/emboss/main.go -embosser-uri grpc://localhost:8080 ./fixtures/menu.jpg
