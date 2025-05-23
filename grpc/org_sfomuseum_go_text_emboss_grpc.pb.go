@@ -19,89 +19,89 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	Embosser_EmbossText_FullMethodName = "/Embosser/EmbossText"
+	TextEmbosser_EmbossText_FullMethodName = "/text_embosser.TextEmbosser/EmbossText"
 )
 
-// EmbosserClient is the client API for Embosser service.
+// TextEmbosserClient is the client API for TextEmbosser service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
-type EmbosserClient interface {
+type TextEmbosserClient interface {
 	EmbossText(ctx context.Context, in *EmbossTextRequest, opts ...grpc.CallOption) (*EmbossTextResponse, error)
 }
 
-type embosserClient struct {
+type textEmbosserClient struct {
 	cc grpc.ClientConnInterface
 }
 
-func NewEmbosserClient(cc grpc.ClientConnInterface) EmbosserClient {
-	return &embosserClient{cc}
+func NewTextEmbosserClient(cc grpc.ClientConnInterface) TextEmbosserClient {
+	return &textEmbosserClient{cc}
 }
 
-func (c *embosserClient) EmbossText(ctx context.Context, in *EmbossTextRequest, opts ...grpc.CallOption) (*EmbossTextResponse, error) {
+func (c *textEmbosserClient) EmbossText(ctx context.Context, in *EmbossTextRequest, opts ...grpc.CallOption) (*EmbossTextResponse, error) {
 	out := new(EmbossTextResponse)
-	err := c.cc.Invoke(ctx, Embosser_EmbossText_FullMethodName, in, out, opts...)
+	err := c.cc.Invoke(ctx, TextEmbosser_EmbossText_FullMethodName, in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-// EmbosserServer is the server API for Embosser service.
-// All implementations must embed UnimplementedEmbosserServer
+// TextEmbosserServer is the server API for TextEmbosser service.
+// All implementations must embed UnimplementedTextEmbosserServer
 // for forward compatibility
-type EmbosserServer interface {
+type TextEmbosserServer interface {
 	EmbossText(context.Context, *EmbossTextRequest) (*EmbossTextResponse, error)
-	mustEmbedUnimplementedEmbosserServer()
+	mustEmbedUnimplementedTextEmbosserServer()
 }
 
-// UnimplementedEmbosserServer must be embedded to have forward compatible implementations.
-type UnimplementedEmbosserServer struct {
+// UnimplementedTextEmbosserServer must be embedded to have forward compatible implementations.
+type UnimplementedTextEmbosserServer struct {
 }
 
-func (UnimplementedEmbosserServer) EmbossText(context.Context, *EmbossTextRequest) (*EmbossTextResponse, error) {
+func (UnimplementedTextEmbosserServer) EmbossText(context.Context, *EmbossTextRequest) (*EmbossTextResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method EmbossText not implemented")
 }
-func (UnimplementedEmbosserServer) mustEmbedUnimplementedEmbosserServer() {}
+func (UnimplementedTextEmbosserServer) mustEmbedUnimplementedTextEmbosserServer() {}
 
-// UnsafeEmbosserServer may be embedded to opt out of forward compatibility for this service.
-// Use of this interface is not recommended, as added methods to EmbosserServer will
+// UnsafeTextEmbosserServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to TextEmbosserServer will
 // result in compilation errors.
-type UnsafeEmbosserServer interface {
-	mustEmbedUnimplementedEmbosserServer()
+type UnsafeTextEmbosserServer interface {
+	mustEmbedUnimplementedTextEmbosserServer()
 }
 
-func RegisterEmbosserServer(s grpc.ServiceRegistrar, srv EmbosserServer) {
-	s.RegisterService(&Embosser_ServiceDesc, srv)
+func RegisterTextEmbosserServer(s grpc.ServiceRegistrar, srv TextEmbosserServer) {
+	s.RegisterService(&TextEmbosser_ServiceDesc, srv)
 }
 
-func _Embosser_EmbossText_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+func _TextEmbosser_EmbossText_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(EmbossTextRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(EmbosserServer).EmbossText(ctx, in)
+		return srv.(TextEmbosserServer).EmbossText(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: Embosser_EmbossText_FullMethodName,
+		FullMethod: TextEmbosser_EmbossText_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(EmbosserServer).EmbossText(ctx, req.(*EmbossTextRequest))
+		return srv.(TextEmbosserServer).EmbossText(ctx, req.(*EmbossTextRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-// Embosser_ServiceDesc is the grpc.ServiceDesc for Embosser service.
+// TextEmbosser_ServiceDesc is the grpc.ServiceDesc for TextEmbosser service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
-var Embosser_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "Embosser",
-	HandlerType: (*EmbosserServer)(nil),
+var TextEmbosser_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "text_embosser.TextEmbosser",
+	HandlerType: (*TextEmbosserServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
 			MethodName: "EmbossText",
-			Handler:    _Embosser_EmbossText_Handler,
+			Handler:    _TextEmbosser_EmbossText_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
