@@ -2,7 +2,7 @@
 // versions:
 // - protoc-gen-go-grpc v1.3.0
 // - protoc             v5.29.3
-// source: grpc/org_sfomuseum_go_text_emboss.proto
+// source: grpc/embosser.proto
 
 package grpc
 
@@ -19,7 +19,7 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	TextEmbosser_EmbossText_FullMethodName = "/text_embosser.TextEmbosser/EmbossText"
+	TextEmbosser_EmbossText_FullMethodName = "/org_sfomuseum_text_embosser.TextEmbosser/EmbossText"
 )
 
 // TextEmbosserClient is the client API for TextEmbosser service.
@@ -96,7 +96,7 @@ func _TextEmbosser_EmbossText_Handler(srv interface{}, ctx context.Context, dec 
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var TextEmbosser_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "text_embosser.TextEmbosser",
+	ServiceName: "org_sfomuseum_text_embosser.TextEmbosser",
 	HandlerType: (*TextEmbosserServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
@@ -105,5 +105,5 @@ var TextEmbosser_ServiceDesc = grpc.ServiceDesc{
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
-	Metadata: "grpc/org_sfomuseum_go_text_emboss.proto",
+	Metadata: "grpc/embosser.proto",
 }

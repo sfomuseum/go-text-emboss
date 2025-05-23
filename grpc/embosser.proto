@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-package text_embosser;
+package org_sfomuseum_text_embosser;
 option go_package = "github.com/sfomuseum/go-text-emboss/grpc";
 
 service TextEmbosser {
