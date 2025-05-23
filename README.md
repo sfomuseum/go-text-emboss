@@ -53,7 +53,7 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/sfomuseum/go-text-emboss"
+	"github.com/sfomuseum/go-text-emboss/v2"
 )
 
 func main() {
@@ -80,7 +80,7 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/sfomuseum/go-text-emboss"
+	"github.com/sfomuseum/go-text-emboss/v2"
 )
 
 func main() {
