@@ -95,6 +95,20 @@ func NewGrpcEmbosser(ctx context.Context, uri string) (Embosser, error) {
 		opts = append(opts, grpc.WithInsecure())
 	}
 
+	if q.Has("throttle-transport"){
+
+		throttle, err := strconv.ParseBool(q.Get("throttle-transport"))
+
+		if err != nil {
+		   return nil, fmt.Errorf("Failed to parse ?throttle-transport= parameter, %v", err)
+		}
+
+		if throttle {
+			opts = append(opts, grpc.WithInitialWindowSize(65535))
+			opts = append(opts, grpc.WithInitialConnWindowSize(65535))
+		}
+	}
+	
 	conn, err := grpc.Dial(addr, opts...)
 
 	if err != nil {
